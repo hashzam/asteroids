@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ASTEROIDS — vector arcade survival</title>
+<meta name="description" content="A modern take on the classic Asteroids arcade game. Waves, UFOs, power-ups, and pure vector chaos. Built with Python and pygame." />
+<style>
+  :root {
+    --bg: #05060a;
+    --fg: #e8f0ff;
+    --dim: #7f8aa3;
+    --accent: #64ff8c;
+    --blue: #6464ff;
+    --yellow: #ffff64;
+    --orange: #ffa500;
+    --red: #ff5555;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body {
+    font-family: "Courier New", ui-monospace, Menlo, Consolas, monospace;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); }
+
+  #space {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* HERO */
+  header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+  }
+  h1 {
+    font-size: clamp(3rem, 14vw, 9rem);
+    letter-spacing: clamp(.3rem, 2vw, 1.4rem);
+    font-weight: 700;
+    text-shadow: 0 0 18px rgba(100,255,140,.55);
+    color: #fff;
+  }
+  .tagline {
+    margin-top: 18px;
+    font-size: clamp(.9rem, 2.5vw, 1.25rem);
+    color: var(--dim);
+    letter-spacing: .15rem;
+    text-transform: uppercase;
+  }
+  .cta {
+    margin-top: 44px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-block;
+    padding: 14px 30px;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: .2rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: transparent;
+    transition: all .15s ease;
+  }
+  .btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 24px rgba(100,255,140,.6);
+  }
+  .btn.ghost { border-color: var(--dim); color: var(--dim); }
+  .btn.ghost:hover { background: var(--dim); color: var(--bg); box-shadow: none; }
+
+  .scroll-hint {
+    margin-top: 70px;
+    color: var(--dim);
+    font-size: .8rem;
+    letter-spacing: .25rem;
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+  /* SECTIONS */
+  section { padding: 90px 0; }
+  h2 {
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+    letter-spacing: .3rem;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+  .lead { color: var(--dim); max-width: 620px; margin-bottom: 44px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    border: 1px solid #1c2233;
+    background: rgba(12,16,26,.72);
+    padding: 26px 24px;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .card .icon { font-size: 1.7rem; margin-bottom: 12px; }
+  .card h3 {
+    font-size: 1rem;
+    letter-spacing: .12rem;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .card p { color: var(--dim); font-size: .92rem; }
+
+  /* SCORE TABLE */
+  .scoreboard {
+    border: 1px solid #1c2233;
+    background: rgba(12,16,26,.72);
+  }
+  .scoreboard .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #1c2233;
+  }
+  .scoreboard .row:last-child { border-bottom: none; }
+  .scoreboard .row span:first-child { letter-spacing: .1rem; }
+  .scoreboard .pts { color: var(--yellow); font-weight: 700; }
+
+  /* CONTROLS */
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .key-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  kbd {
+    display: inline-block;
+    min-width: 42px;
+    text-align: center;
+    padding: 8px 12px;
+    border: 1px solid #2a3450;
+    border-bottom-width: 3px;
+    border-radius: 5px;
+    background: #0d1220;
+    color: #fff;
+    font-family: inherit;
+    font-size: .85rem;
+  }
+  .key-row span { color: var(--dim); font-size: .9rem; }
+
+  /* PLAY / INSTALL */
+  pre {
+    background: #0a0d16;
+    border: 1px solid #1c2233;
+    border-left: 3px solid var(--accent);
+    padding: 22px 24px;
+    overflow-x: auto;
+    color: #cfe;
+    font-size: .9rem;
+    line-height: 1.8;
+  }
+  pre .c { color: var(--dim); }
+
+  footer {
+    text-align: center;
+    padding: 50px 24px;
+    color: var(--dim);
+    font-size: .8rem;
+    border-top: 1px solid #1c2233;
+    letter-spacing: .1rem;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<header>
+  <h1>ASTEROIDS</h1>
+  <p class="tagline">Vector arcade survival · drift, blast, repeat</p>
+  <div class="cta">
+    <a class="btn" href="#play">Play it</a>
+    <a class="btn ghost" href="https://github.com/hashzam/asteroids">View source</a>
+  </div>
+  <p class="scroll-hint">↓ scroll for the briefing</p>
+</header>
+
+<main>
+  <section id="features" class="wrap">
+    <h2>The mission</h2>
+    <p class="lead">A modern rebuild of the 1979 arcade classic — written from scratch in Python with pygame. Newtonian thrust, escalating waves, and hostile UFOs that shoot back.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🌊</div>
+        <h3>Wave system</h3>
+        <p>Each cleared wave adds another asteroid and cranks the speed up 10%. Survive as long as your reflexes allow.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛸</div>
+        <h3>Hunter UFOs</h3>
+        <p>Large and small saucers cruise in and open fire. The small one is worth 1000 points — if you can hit it.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Power-ups</h3>
+        <p>Shields and rapid fire drop from wreckage. Triple your fire rate or shrug off a hit.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🚀</div>
+        <h3>Real physics</h3>
+        <p>Momentum-based thrust with drag and a top speed. You don't steer — you accelerate.</p>
+      </div>
+      <div class="card">
+        <div class="icon">✨</div>
+        <h3>Particle FX</h3>
+        <p>Explosions, thruster trails, and a parallax starfield bring the vector look to life.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏆</div>
+        <h3>High scores</h3>
+        <p>Your best run is saved to disk. Three lives, brief invincibility on respawn — make them count.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="scoring" class="wrap">
+    <h2>Scoring</h2>
+    <p class="lead">Smaller targets are worth more. Break the big rocks down and pick off the saucers.</p>
+    <div class="scoreboard">
+      <div class="row"><span>Large asteroid</span><span class="pts">20 pts</span></div>
+      <div class="row"><span>Medium asteroid</span><span class="pts">50 pts</span></div>
+      <div class="row"><span>Small asteroid</span><span class="pts">100 pts</span></div>
+      <div class="row"><span>Large UFO</span><span class="pts">200 pts</span></div>
+      <div class="row"><span>Small UFO</span><span class="pts">1000 pts</span></div>
+    </div>
+  </section>
+
+  <section id="controls" class="wrap">
+    <h2>Controls</h2>
+    <p class="lead">Keyboard only. Learn the drift.</p>
+    <div class="controls">
+      <div class="key-row"><kbd>W</kbd><span>Thrust forward</span></div>
+      <div class="key-row"><kbd>S</kbd><span>Reverse thrust</span></div>
+      <div class="key-row"><kbd>A</kbd><span>Rotate left</span></div>
+      <div class="key-row"><kbd>D</kbd><span>Rotate right</span></div>
+      <div class="key-row"><kbd>SPACE</kbd><span>Fire</span></div>
+      <div class="key-row"><kbd>P</kbd><span>Pause</span></div>
+    </div>
+  </section>
+
+  <section id="play" class="wrap">
+    <h2>Play it</h2>
+    <p class="lead">Clone the repo and launch. You'll need Python 3 — the project uses <a href="https://docs.astral.sh/uv/">uv</a> to manage dependencies.</p>
+    <pre><span class="c"># grab the code</span>
+git clone https://github.com/hashzam/asteroids.git
+cd asteroids
+
+<span class="c"># run it (uv installs pygame for you)</span>
+uv run main.py
+
+<span class="c"># ...or with plain pip</span>
+pip install pygame
+python main.py</pre>
+  </section>
+</main>
+
+<footer>
+  ASTEROIDS · built with Python + pygame · <a href="https://github.com/hashzam/asteroids">github.com/hashzam/asteroids</a>
+</footer>
+
+<script>
+(function () {
+  const canvas = document.getElementById("space");
+  const ctx = canvas.getContext("2d");
+  let W, H, stars = [], rocks = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // parallax starfield
+  for (let i = 0; i < 140; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      s: Math.random() * 0.25 + 0.05,
+    });
+  }
+
+  // drifting vector asteroids
+  function makeRock() {
+    const radius = 22 + Math.random() * 46;
+    const pts = [];
+    const n = 9 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < n; i++) {
+      const j = 0.65 + Math.random() * 0.5;
+      pts.push(radius * j);
+    }
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      a: Math.random() * Math.PI * 2,
+      va: (Math.random() - 0.5) * 0.006,
+      radius, pts,
+    };
+  }
+  for (let i = 0; i < 9; i++) rocks.push(makeRock());
+
+  function wrap(o, m) {
+    if (o.x < -m) o.x = W + m;
+    if (o.x > W + m) o.x = -m;
+    if (o.y < -m) o.y = H + m;
+    if (o.y > H + m) o.y = -m;
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (const st of stars) {
+      st.y += st.s;
+      if (st.y > H) { st.y = 0; st.x = Math.random() * W; }
+      ctx.fillStyle = "rgba(232,240,255," + (st.r / 1.6) + ")";
+      ctx.fillRect(st.x, st.y, st.r, st.r);
+    }
+
+    ctx.strokeStyle = "rgba(127,138,163,.55)";
+    ctx.lineWidth = 2;
+    for (const r of rocks) {
+      r.x += r.vx; r.y += r.vy; r.a += r.va;
+      wrap(r, r.radius + 4);
+      ctx.beginPath();
+      for (let i = 0; i < r.pts.length; i++) {
+        const ang = r.a + (i / r.pts.length) * Math.PI * 2;
+        const px = r.x + Math.cos(ang) * r.pts[i];
+        const py = r.y + Math.sin(ang) * r.pts[i];
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
