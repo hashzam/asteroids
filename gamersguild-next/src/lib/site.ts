@@ -15,8 +15,9 @@ export const nav = {
     { href: "/", label: "Home" },
     { href: "/locations", label: "Locations" },
     { href: "/pricing", label: "Pricing" },
+    { href: "/games", label: "Games" },
     { href: "/birthdays", label: "Birthdays" },
     { href: "/lans", label: "Tournaments" },
   ],
-  cta: { href: "/locations#book", label: "Book a Station" },
+  cta: { href: "/locations", label: "Book a Station" },
 } as const;

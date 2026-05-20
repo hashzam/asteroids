@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight, Shield } from "lucide-react";
+import { ChevronRight, MessageCircle, Phone, Shield } from "lucide-react";
 import { Container } from "@/components/site/container";
 import { PriceCard } from "@/components/pricing/price-card";
+import { locations } from "@/lib/locations";
 import {
   consolePricing,
   pcPricing,
@@ -93,6 +94,87 @@ export default function PricingPage() {
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {specialtyPricing.map((group) => (
               <PriceCard key={group.id} group={group} />
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Booking lines */}
+      <section className="border-t border-border py-20 sm:py-24">
+        <Container>
+          <div className="max-w-2xl">
+            <p className="font-display text-xs font-bold uppercase tracking-[0.3em] text-accent">
+              Booking lines
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Call the branch. Skip the queue.
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Every branch has its own booking line. Phone is fastest, WhatsApp
+              works too. Tell us the time, the squad, the game.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-4 lg:grid-cols-3">
+            {locations.map((loc) => (
+              <div
+                key={loc.slug}
+                className="rounded-xl border border-border bg-card/60 p-6"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-display text-xl font-bold tracking-tight">
+                    {loc.name}
+                  </h3>
+                  {loc.flagship && (
+                    <span className="rounded-full border border-accent/40 bg-accent/10 px-2.5 py-0.5 font-display text-[0.55rem] font-bold uppercase tracking-[0.25em] text-accent">
+                      Flagship
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{loc.area}</p>
+
+                <div className="mt-5 space-y-2">
+                  <a
+                    href={`tel:${loc.phone}`}
+                    className="flex items-center justify-between gap-3 rounded-md border border-border bg-background/60 px-3 py-3 transition hover:border-primary/50"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <Phone className="size-4 text-primary" />
+                      <span className="font-display text-sm font-bold tracking-tight">
+                        {loc.phoneDisplay}
+                      </span>
+                    </span>
+                    <span className="font-display text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                      Call
+                    </span>
+                  </a>
+                  <a
+                    href={`https://wa.me/${loc.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-3 rounded-md border border-border bg-background/60 px-3 py-3 transition hover:border-accent/60"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <MessageCircle className="size-4 text-accent" />
+                      <span className="font-display text-sm font-bold tracking-tight">
+                        WhatsApp
+                      </span>
+                    </span>
+                    <span className="font-display text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                      Chat
+                    </span>
+                  </a>
+                </div>
+
+                <p className="mt-4 text-xs text-muted-foreground">{loc.hours}</p>
+                <Link
+                  href={`/locations/${loc.slug}`}
+                  className="mt-4 inline-flex items-center gap-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-primary transition hover:gap-1.5"
+                >
+                  Branch details
+                  <ChevronRight className="size-3.5" />
+                </Link>
+              </div>
             ))}
           </div>
         </Container>
