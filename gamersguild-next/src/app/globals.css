@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-fg);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-fg);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-fg);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-chakra-petch), system-ui, sans-serif;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+/* Dark theme is the default. Light theme is the alt. */
+:root,
+[data-theme="dark"] {
+  --bg: #09090b;
+  --fg: #f4f4f5;
+  --card: #121216;
+  --card-fg: #f4f4f5;
+  --muted: #1c1c20;
+  --muted-fg: #a1a1aa;
+  --border: #27272a;
+  --input: #1c1c20;
+  --ring: #ff2233;
+  --primary: #ff2233;
+  --primary-fg: #ffffff;
+  --accent: #7cf3ff;
+  --accent-fg: #0a0a0c;
+  --destructive: #ef4444;
+  --destructive-fg: #ffffff;
+}
+
+[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #0a0a0c;
+  --card: #f8f8f9;
+  --card-fg: #0a0a0c;
+  --muted: #f4f4f5;
+  --muted-fg: #52525b;
+  --border: #e4e4e7;
+  --input: #f4f4f5;
+  --ring: #dc1a2a;
+  --primary: #dc1a2a;
+  --primary-fg: #ffffff;
+  --accent: #00b8d4;
+  --accent-fg: #ffffff;
+  --destructive: #dc2626;
+  --destructive-fg: #ffffff;
+}
+
+/* Make Tailwind's `dark:` variants respond to data-theme. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+html {
+  scroll-behavior: smooth;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-fg);
+}
