@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm --prefix gamersguild install",
-  "buildCommand": "npm --prefix gamersguild run build",
-  "outputDirectory": "gamersguild/dist"
+  "framework": "nextjs",
+  "installCommand": "npm --prefix gamersguild-next install",
+  "buildCommand": "npm --prefix gamersguild-next run build",
+  "outputDirectory": "gamersguild-next/.next"
 }
