@@ -1,52 +1,48 @@
-# Gamers Guild Hyderabad — website
+# Gamers Guild Hyderabad
 
-A full redesign of the Gamers Guild Hyderabad site: a single-page experience
-with a 3D WebGL hero (synthwave grid, floating neon polyhedra, particles +
-bloom), animated stats, 3D tilt cards, a tournament circuit, arena pricing
-and a contact form.
+Custom website for Gamers Guild, a premium gaming cafe chain in Hyderabad with
+three locations: Madhapur, Begumpet and Banjara Hills.
 
-Built with **Vite** + **Three.js**.
+## Stack
 
-## Run it locally
+- Next.js (App Router) + TypeScript
+- Tailwind CSS v4
+- shadcn-style components (hand-authored in `components/ui`)
+- next-themes (dark default, light available)
+- Framer Motion for restrained motion
 
-You need [Node.js](https://nodejs.org) 18 or newer (it ships with `npm`).
+## Develop
 
 ```bash
 cd gamersguild
-npm install      # one-time: downloads Three.js + Vite
-npm run dev      # start the dev server → http://localhost:5173
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-`npm run dev` hot-reloads as you edit files.
-
-## Build for production
+## Build
 
 ```bash
-npm run build    # outputs a static site into gamersguild/dist/
-npm run preview  # preview that production build locally
+npm run build
+npm run start
 ```
 
-The contents of `dist/` are plain static files — drop them on any host
-(Netlify, Vercel, GitHub Pages, S3, your own server). `base` is set to
-`./` in `vite.config.js`, so it works from a domain root or a subpath.
-
-## Project structure
+## Structure
 
 ```
-gamersguild/
-├─ index.html        markup for every section
-├─ vite.config.js    build / dev-server config
-└─ src/
-   ├─ main.js        nav, scroll reveals, stat counters, tilt, form
-   ├─ hero3d.js      the Three.js WebGL hero scene
-   └─ style.css      all styling (neon gaming theme)
+app/            routes (home, pricing, locations, birthdays, tournaments, blog)
+components/
+  layout/       header, footer, logo
+  theme/        theme provider and toggle
+  ui/           shadcn-style primitives
+lib/            site config, locations and pricing data, helpers
+content/blog/   MDX posts (migrated later)
+public/         images, videos, logo (placeholders for now)
 ```
 
-## Notes
+All business data (locations, pricing, phone numbers) lives in `lib/` as the
+single source of truth.
 
-- Stats, tournament dates and pricing are realistic placeholders — swap them
-  for real numbers in `index.html`.
-- Social links in the footer point to `#`; add the real URLs.
-- The contact form is front-end only. Wire it to an email service or backend
-  in the `joinForm` submit handler in `src/main.js`.
-- Respects `prefers-reduced-motion` and falls back gracefully without WebGL.
+## Deployment
+
+Deploys to Vercel. Set the project Root Directory to `gamersguild` so Next.js
+is auto-detected.
