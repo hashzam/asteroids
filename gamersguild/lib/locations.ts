@@ -5,6 +5,8 @@ export interface Location {
   name: string;
   shortName: string;
   area: string;
+  address: string;
+  hours: string;
   isFlagship: boolean;
   tagline: string;
   phoneDisplay: string;
@@ -30,7 +32,10 @@ export const LOCATIONS: Location[] = [
     slug: "banjara-hills",
     name: "Gamers Guild Banjara Hills",
     shortName: "Banjara Hills",
-    area: "Banjara Hills, Hyderabad",
+    area: "Road No. 11, Banjara Hills",
+    address:
+      "5th Floor, Delta Seacon, Block A, Road No. 11, Banjara Hills, Hyderabad 500034",
+    hours: "Open daily, closes 4 AM",
     isFlagship: true,
     tagline: "The flagship. Every device we run, under one roof.",
     phoneDisplay: "+91 86397 13524",
@@ -52,7 +57,10 @@ export const LOCATIONS: Location[] = [
     slug: "madhapur",
     name: "Gamers Guild Madhapur",
     shortName: "Madhapur",
-    area: "HITEC City, Madhapur, Hyderabad",
+    area: "HITEC City, Madhapur",
+    address:
+      "Ayyappa Society, Siddhi Vinayak Nagar, 100 Feet Road, Madhapur, Hyderabad 500081",
+    hours: "Open daily, 7 AM to 5 AM",
     isFlagship: false,
     tagline: "Where it all started. The original Gamers Guild.",
     phoneDisplay: "+91 75696 13318",
@@ -72,7 +80,10 @@ export const LOCATIONS: Location[] = [
     slug: "begumpet",
     name: "Gamers Guild Begumpet",
     shortName: "Begumpet",
-    area: "Begumpet, Hyderabad",
+    area: "Sardar Patel Road, Begumpet",
+    address:
+      "Mayfair Building, 4th Floor, Sardar Patel Road, Sindhi Colony, Begumpet, Hyderabad 500016",
+    hours: "Open daily, 7 AM to 5 AM",
     isFlagship: false,
     tagline: "Built for esports. 240Hz, RTX 5060, zero compromise.",
     phoneDisplay: "+91 89786 61707",
